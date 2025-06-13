@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
 import { TodoService } from './todo.service';
-import { todoDto } from './dto/todo.dto';
+import { CreateTodoDto } from './dto/create-todo.dto';
+import { updateTodoDto } from './dto/update-todo.dto';
 
 @Controller('todo')
 export class TodoController {
@@ -15,21 +16,24 @@ export class TodoController {
     @Get(':id')
     getOneTodo(@Param('id') id: string){
         try {
-            return this.todoService.getOneTodo(+id)
+            return this.todoService.getOneTodo(id)
         } catch (error) {
             throw new NotFoundException(error.message);
         }
     }
 
     @Post()
-    createTodo(@Body() todo: todoDto){
+    createTodo(@Body() todo: CreateTodoDto){
+        // console.log(typeof todo.name);
+        // console.log(todo.name);
+        
         return this.todoService.createTodo(todo)
     }
 
-    @Put(':id')
-    updateTodo(@Param('id') id: string, @Body() updatedTodo: todoDto){
+    @Patch(':id')
+    updateTodo(@Param('id') id: string, @Body() updatedTodo: updateTodoDto){
         try {
-            return this.todoService.updateTodo(+id, updatedTodo);
+            return this.todoService.updateTodo(id, updatedTodo);
         } catch (error) {
             throw new NotFoundException(error.message);        
         }
@@ -38,7 +42,7 @@ export class TodoController {
     @Delete(':id')
     deleteTodo(@Param('id') id: string){
         try {
-            return this.todoService.deleteTodo(+id);
+            return this.todoService.deleteTodo(id);
         } catch (error) {
             throw new NotFoundException(error.message);        
         }
